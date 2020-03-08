@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 public class ChatMessage implements Action {
     @Override
     public String getID() {
-        return "chat";
+        return "message";
     }
 
     @Override
