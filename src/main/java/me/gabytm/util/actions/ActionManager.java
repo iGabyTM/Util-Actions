@@ -1,5 +1,6 @@
 package me.gabytm.util.actions;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.gabytm.util.actions.actions.command.ConsoleCommand;
 import me.gabytm.util.actions.actions.command.PlayerCommand;
 import me.gabytm.util.actions.actions.message.BroadcastMessage;
@@ -40,7 +41,7 @@ public class ActionManager {
 
     private String replacePlaceholders(final Player player, final String line) {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            return line;
+            return PlaceholderAPI.setPlaceholders(player, line);
         }
 
         return StringUtils.replace(line, "%player_name%", player.getName());
