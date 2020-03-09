@@ -12,5 +12,13 @@ public interface Action {
         return Collections.emptyList();
     }
 
+    default String getDescription() {
+        return null;
+    }
+
+    default String getUsage() {
+        return null;
+    }
+
     void run(final Player player, final String data);
 }

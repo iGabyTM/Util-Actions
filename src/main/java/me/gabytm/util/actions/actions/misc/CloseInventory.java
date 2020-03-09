@@ -11,6 +11,16 @@ public class CloseInventory implements Action {
     }
 
     @Override
+    public String getDescription() {
+        return "Close player's inventory";
+    }
+
+    @Override
+    public String getUsage() {
+        return "[close]";
+    }
+
+    @Override
     public void run(Player player, String data) {
         player.closeInventory();
     }

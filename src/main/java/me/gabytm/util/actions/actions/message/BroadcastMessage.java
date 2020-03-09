@@ -11,6 +11,16 @@ public class BroadcastMessage implements Action {
     }
 
     @Override
+    public String getDescription() {
+        return "Send a message to all online players";
+    }
+
+    @Override
+    public String getUsage() {
+        return "[broadcast] This is a broadcast";
+    }
+
+    @Override
     public void run(Player player, String data) {
         Bukkit.broadcastMessage(data);
     }
