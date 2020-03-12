@@ -5,12 +5,12 @@ import me.gabytm.util.actions.Action;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 public class JsonMessage implements Action {
-    private final JavaPlugin plugin;
+    private final Plugin plugin;
 
-    public JsonMessage(JavaPlugin plugin) {
+    public JsonMessage(Plugin plugin) {
         this.plugin = plugin;
     }
 
@@ -21,18 +21,18 @@ public class JsonMessage implements Action {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Send a json message to the player";
     }
 
     @Override
     public String getUsage() {
-        return "[json]";
+        return "[json] json";
     }
 
     @Override
     public void run(Player player, String json) {
         try {
-            BaseComponent[] components = ComponentSerializer.parse(json);
+            final BaseComponent[] components = ComponentSerializer.parse(json);
             player.spigot().sendMessage(components);
         } catch (JsonSyntaxException ignored) {
             plugin.getLogger().warning("[ActionUtil] Invalid JSON: '" + json + "'");

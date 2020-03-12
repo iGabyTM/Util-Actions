@@ -4,12 +4,12 @@ import me.gabytm.util.actions.Action;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 public class PermissionCommand implements Action {
-    private final JavaPlugin plugin;
+    private final Plugin plugin;
 
-    public PermissionCommand(final JavaPlugin plugin) {
+    public PermissionCommand(final Plugin plugin) {
         this.plugin = plugin;
     }
 

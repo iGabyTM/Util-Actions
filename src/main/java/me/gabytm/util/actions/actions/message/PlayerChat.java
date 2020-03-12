@@ -1,9 +1,16 @@
 package me.gabytm.util.actions.actions.message;
 
 import me.gabytm.util.actions.Action;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 public class PlayerChat implements Action {
+    private final Plugin plugin;
+
+    public PlayerChat(Plugin plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public String getID() {
@@ -22,6 +29,6 @@ public class PlayerChat implements Action {
 
     @Override
     public void run(Player player, String data) {
-        player.chat(data);
+        Bukkit.getScheduler().runTask(plugin, () -> player.chat(data));
     }
 }

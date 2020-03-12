@@ -14,7 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,9 +24,9 @@ import java.util.stream.Stream;
 
 public class ActionManager {
     private final Map<String, Action> actions = new HashMap<>();
-    private final JavaPlugin plugin;
+    private final Plugin plugin;
 
-    public ActionManager(final JavaPlugin plugin) {
+    public ActionManager(final Plugin plugin) {
         this.plugin = plugin;
 
         Stream.of(
@@ -36,7 +36,7 @@ public class ActionManager {
                 new CloseInventory(),
                 new JsonMessage(plugin),
                 new PermissionCommand(plugin),
-                new PlayerChat(),
+                new PlayerChat(plugin),
                 new PlayerCommand(plugin),
                 new PlaySound()
         ).forEach(action -> register(action, true));

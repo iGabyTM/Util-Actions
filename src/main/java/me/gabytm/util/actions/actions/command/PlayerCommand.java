@@ -3,12 +3,12 @@ package me.gabytm.util.actions.actions.command;
 import me.gabytm.util.actions.Action;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 public class PlayerCommand implements Action {
-    private final JavaPlugin plugin;
+    private final Plugin plugin;
 
-    public PlayerCommand(JavaPlugin plugin) {
+    public PlayerCommand(final Plugin plugin) {
         this.plugin = plugin;
     }
 
