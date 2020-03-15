@@ -1,5 +1,6 @@
+# (Work in progress)
 # Installation
-> Replace `{version}` with the latest release [![](https://jitpack.io/v/iGabyTM/Util-Actions.svg)](https://jitpack.io/#iGabyTM/Util-Actions) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/71e290c61c814ce9b1068497dd8cd3bb)](https://www.codacy.com/manual/iGabyTM/Util-Actions?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=iGabyTM/Util-Actions&amp;utm_campaign=Badge_Grade)
+> Replace `{version}` with the latest release [![](https://jitpack.io/v/iGabyTM/Util-Actions.svg)](https://jitpack.io/#iGabyTM/Util-Actions) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/44373db818ad47728a67a636f901a2ca)](https://www.codacy.com/manual/iGabyTM/Util-Actions?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=iGabyTM/Util-Actions&amp;utm_campaign=Badge_Grade)
 ### Gradle
 ```groovy
 repositories {
@@ -13,18 +14,18 @@ dependencies {
 
 ### Maven
 ```xml
-	<repositories>
-		<repository>
-		    <id>jitpack.io</id>
-		    <url>https://jitpack.io</url>
-		</repository>
-	</repositories>
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
 
-	<dependency>
-	    <groupId>com.github.iGabyTM</groupId>
-	    <artifactId>Util-Actions</artifactId>
-	    <version>{version}</version>
-    </dependency>
+<dependency>
+    <groupId>com.github.iGabyTM</groupId>
+    <artifactId>Util-Actions</artifactId>
+    <version>{version}</version>
+</dependency>
 ```
 
 # Usage
@@ -37,7 +38,6 @@ actionManager.execute(player, "[chat] This message will be sent by the player :)
 ```
 
 # Actions
-###Default
 | ID | Alias | Description | Usage |
 | --- | --- | --- | --- |
 | `broadcast` | - | Send a message to all online players | `[broadcast] message` |
