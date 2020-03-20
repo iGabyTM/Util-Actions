@@ -1,13 +1,11 @@
 package me.gabytm.util.actions;
 
+import com.google.common.collect.ImmutableMap;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.gabytm.util.actions.actions.command.ConsoleCommand;
 import me.gabytm.util.actions.actions.command.PermissionCommand;
 import me.gabytm.util.actions.actions.command.PlayerCommand;
-import me.gabytm.util.actions.actions.message.BroadcastMessage;
-import me.gabytm.util.actions.actions.message.ChatMessage;
-import me.gabytm.util.actions.actions.message.JsonMessage;
-import me.gabytm.util.actions.actions.message.PlayerChat;
+import me.gabytm.util.actions.actions.message.*;
 import me.gabytm.util.actions.actions.misc.CloseInventory;
 import me.gabytm.util.actions.actions.misc.PlaySound;
 import org.apache.commons.lang.StringUtils;
@@ -26,20 +24,16 @@ public class ActionManager {
     private final Map<String, Action> actions = new HashMap<>();
     private final Plugin plugin;
 
-    public ActionManager(final Plugin plugin) {
+    public ActionManager(final Plugin plugin, final boolean defaults) {
         this.plugin = plugin;
 
-        Stream.of(
-                new BroadcastMessage(),
-                new ChatMessage(),
-                new ConsoleCommand(plugin),
-                new CloseInventory(),
-                new JsonMessage(plugin),
-                new PermissionCommand(plugin),
-                new PlayerChat(plugin),
-                new PlayerCommand(plugin),
-                new PlaySound()
-        ).forEach(action -> register(action, true));
+        if (defaults) {
+            loadDefaults();
+        }
+    }
+
+    public ActionManager(final Plugin plugin) {
+        this(plugin, true);
     }
 
     /**
@@ -69,48 +63,125 @@ public class ActionManager {
         final String line = replacePlaceholders(player, data);
 
         if (!line.contains(" ")) {
-            final Action action = getAction(StringUtils.substringBetween(line, "[", "]"));
+            final Action Action = getAction(StringUtils.substringBetween(line, "[", "]"));
 
-            if (action == null) {
+            if (Action == null) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), line);
                 return;
             }
 
-            action.run(player, line);
+            Action.run(player, line);
             return;
         }
 
         final String[] parts = line.split(" ", 2);
-        final Action action = getAction(StringUtils.substringBetween(parts[0], "[", "]"));
+        final Action Action = getAction(StringUtils.substringBetween(parts[0], "[", "]"));
 
-        if (action == null) {
+        if (Action == null) {
             return;
         }
 
-        action.run(player, parts[1]);
+        Action.run(player, parts[1]);
+    }
+
+    /**
+     * Load the default actions
+     */
+    public void loadDefaults() {
+        Stream.of(
+                new ActionBarMessage(),
+                new BroadcastMessage(),
+                new ChatMessage(),
+                new ConsoleCommand(plugin),
+                new CloseInventory(),
+                new JsonMessage(plugin),
+                new PermissionCommand(plugin),
+                new PlayerChat(plugin),
+                new PlayerCommand(plugin),
+                new PlaySound()
+        ).forEach(action -> register(action, true));
     }
 
     /**
      * Register a new action
      *
-     * @param action   the action that will be registered
+     * @param Action   the action that will be registered
      * @param override if true new actions will take priority if another
      *                 action is registered with the same id or alias
      */
-    public void register(final Action action, final boolean override) {
-        final String id = (action.getID() == null ? action.getClass().getSimpleName() : action.getID()).toUpperCase();
+    public void register(final Action Action, final boolean override) {
+        final String id = (Action.getID() == null ? Action.getClass().getSimpleName() : Action.getID()).toUpperCase();
 
         if (override) {
             if (actions.get(id) != null) {
                 plugin.getLogger().warning("[ActionUtil] Overriding the action with ID '" + id + "'");
             }
 
-            actions.put(id, action);
-            action.getAliases().forEach(alias -> actions.put(alias.toUpperCase(), action));
+            actions.put(id, Action);
+            Action.getAliases().forEach(alias -> actions.put(alias.toUpperCase(), Action));
         } else {
-            actions.putIfAbsent(id, action);
-            action.getAliases().forEach(alias -> actions.putIfAbsent(alias.toUpperCase(), action));
+            actions.putIfAbsent(id, Action);
+            Action.getAliases().forEach(alias -> actions.putIfAbsent(alias.toUpperCase(), Action));
         }
+    }
+
+    public void unregister(final String id, final boolean aliases) {
+        final Action Action = getAction(id);
+
+        if (Action == null) {
+            return;
+        }
+
+        actions.remove(id);
+
+        if (!aliases || Action.getAliases().size() == 0) {
+            return;
+        }
+
+        for (String alias : Action.getAliases()) {
+            final Action act = actions.get(alias);
+
+            if (act == null) {
+                continue;
+            }
+
+            if (act.getID().equals(Action.getID()) && act.getAliases().equals(Action.getAliases()) && act.getDescription().equals(Action.getDescription())) {
+                actions.remove(alias);
+            }
+        }
+    }
+
+    public void unregister(final String action) {
+        unregister(action, true);
+    }
+
+    public void unregister(final List<String> actions, final boolean aliases) {
+        for (String action : actions) {
+            if (action == null) {
+                continue;
+            }
+
+            unregister(action, aliases);
+        }
+    }
+
+    public void unregister(final List<String> actions) {
+        unregister(actions, true);
+    }
+
+    public void unregister(final boolean aliases, final String... actions) {
+        unregister(Arrays.asList(actions), aliases);
+    }
+
+    public void unregister(final String... actions) {
+        unregister(Arrays.asList(actions), true);
+    }
+
+    /**
+     * Unregister all actions
+     */
+    public void unregisterAll() {
+        actions.clear();
     }
 
     /**
@@ -160,10 +231,6 @@ public class ActionManager {
      * @param actions actions array
      */
     public void execute(final Player player, final String... actions) {
-        if (actions == null) {
-            return;
-        }
-
         execute(player, Arrays.asList(actions));
     }
 
@@ -174,10 +241,6 @@ public class ActionManager {
      * @param actions actions array
      */
     public void executeAsync(final Player player, final String... actions) {
-        if (actions == null) {
-            return;
-        }
-
         executeAsync(player, Arrays.asList(actions));
     }
 
@@ -195,9 +258,9 @@ public class ActionManager {
     /**
      * Get all loaded actions
      *
-     * @return actions map
+     * @return immutable copy of the actions map
      */
     public Map<String, Action> getActions() {
-        return actions;
+        return ImmutableMap.copyOf(actions);
     }
 }
